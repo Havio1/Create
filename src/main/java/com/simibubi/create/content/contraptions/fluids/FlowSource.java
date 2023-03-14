@@ -11,7 +11,6 @@ import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 import io.github.fabricators_of_create.porting_lib.util.StorageProvider;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
-import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.ResourceAmount;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.world.level.Level;
@@ -29,7 +28,8 @@ public abstract class FlowSource {
 		if (tank == null)
 			return FluidStack.EMPTY;
 		try (Transaction t = TransferUtil.getTransaction()) {
-			ResourceAmount<FluidVariant> resource = StorageUtil.findExtractableContent(tank, v -> extractionPredicate.test(new FluidStack(v, 1)), t);
+			Predicate<FluidVariant> test = v -> extractionPredicate.test(new FluidStack(v, 1));
+			ResourceAmount<FluidVariant> resource = TransferUtil.extractMatching(tank, test, 1, t);
 			return resource == null ? FluidStack.EMPTY : new FluidStack(resource.resource(), resource.amount());
 		}
 	}
@@ -48,22 +48,20 @@ public abstract class FlowSource {
 	}
 
 	public static class FluidHandler extends FlowSource {
-		StorageProvider<FluidVariant> fluidHandlerProvider;
+		StorageProvider<FluidVariant> provider;
 
 		public FluidHandler(BlockFace location) {
 			super(location);
-			fluidHandlerProvider = null;
+			provider = null;
 		}
 
 		public void manageSource(Level world) {
-			if (fluidHandlerProvider != null)
-				return;
-			fluidHandlerProvider = StorageProvider.createForFluids(world, location.getConnectedPos());
+			provider = StorageProvider.createForFluids(world, location.getConnectedPos());
 		}
 
 		@Override
 		public Storage<FluidVariant> provideHandler() {
-			return fluidHandlerProvider.get(location.getOppositeFace());
+			return provider == null ? null : provider.get(location.getOppositeFace());
 		}
 
 		@Override

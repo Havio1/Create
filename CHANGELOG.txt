@@ -5,3 +5,8 @@ No formatting, just plain text. CurseForge support for it is terrible.
 
 Change logging starts below:
 ----------
+- fix occasional crash with pipes
+- add 'create:diving_fluids' tag to dictate which fluids the Diving Helmet works in
+- fix funnels extracting from the opposite side they should be
+- translate more tags for EMI
+- fix crash with Sodium without Indium (still broken, but you'll see the warning)

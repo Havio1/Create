@@ -8,7 +8,6 @@ import com.google.common.base.Predicates;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
-import com.simibubi.create.foundation.utility.BlockFace;
 
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
@@ -20,7 +19,6 @@ import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 
 public class TankManipulationBehaviour extends CapManipulationBehaviourBase<FluidVariant, TankManipulationBehaviour> {
@@ -71,13 +69,10 @@ public class TankManipulationBehaviour extends CapManipulationBehaviourBase<Flui
 	}
 
 	@Override
-	protected StorageProvider<FluidVariant> getProvider(BlockFace face) {
-		return StorageProvider.createForFluids(getWorld(), face.getPos());
-	}
-
-	@Override
-	protected UnsidedStorageProvider<FluidVariant> getUnsidedProvider(BlockPos pos) {
-		return new UnsidedFluidStorageProvider(FluidStorage.SIDED, getWorld(), pos);
+	protected StorageProvider<FluidVariant> getProvider(BlockPos pos, boolean bypassSided) {
+		return bypassSided
+				? new UnsidedFluidStorageProvider(getWorld(), pos)
+				: StorageProvider.createForFluids(getWorld(), pos);
 	}
 
 	@Override
@@ -86,8 +81,8 @@ public class TankManipulationBehaviour extends CapManipulationBehaviourBase<Flui
 	}
 
 	public static class UnsidedFluidStorageProvider extends UnsidedStorageProvider<FluidVariant> {
-		protected UnsidedFluidStorageProvider(BlockApiLookup<Storage<FluidVariant>, Direction> lookup, Level level, BlockPos pos) {
-			super(lookup, level, pos);
+		protected UnsidedFluidStorageProvider(Level level, BlockPos pos) {
+			super(FluidStorage.SIDED, level, pos);
 		}
 
 		@Nullable

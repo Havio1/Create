@@ -1,6 +1,7 @@
 package com.simibubi.create.content.curiosities.armor;
 
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllTags.AllFluidTags;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 
 import net.minecraft.server.level.ServerPlayer;
@@ -34,7 +35,7 @@ public class DivingHelmetItem extends CopperArmorItem {
 			return;
 
 		boolean lavaDiving = entity.isEyeInFluid(FluidTags.LAVA);
-		if (!entity.isEyeInFluid(FluidTags.WATER) && !lavaDiving)
+		if (!entity.isEyeInFluid(AllFluidTags.DIVING_FLUIDS.tag) && !lavaDiving)
 			return;
 		if (entity instanceof Player && ((Player) entity).isCreative())
 			return;

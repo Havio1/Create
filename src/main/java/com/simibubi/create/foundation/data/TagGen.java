@@ -15,6 +15,7 @@ import com.tterrag.registrate.util.nullness.NonNullFunction;
 import me.alphamode.forgetags.Tags;
 import net.minecraft.data.tags.TagsProvider.TagAppender;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -214,6 +215,9 @@ public class TagGen {
 	private static void genFluidTags(RegistrateTagsProvider<Fluid> prov) {
 		prov.tag(AllFluidTags.BOTTOMLESS_ALLOW.tag)
 			.add(Fluids.WATER, Fluids.LAVA);
+
+		prov.tag(AllFluidTags.DIVING_FLUIDS.tag)
+				.forceAddTag(FluidTags.WATER);
 
 		// VALIDATE
 

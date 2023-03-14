@@ -164,7 +164,6 @@ import com.simibubi.create.content.logistics.block.diodes.ToggleLatchBlock;
 import com.simibubi.create.content.logistics.block.diodes.ToggleLatchGenerator;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkBlock;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkBlockItem;
-import com.simibubi.create.content.logistics.block.display.DisplayLinkModel;
 import com.simibubi.create.content.logistics.block.display.source.AccumulatedItemCountDisplaySource;
 import com.simibubi.create.content.logistics.block.display.source.BoilerDisplaySource;
 import com.simibubi.create.content.logistics.block.display.source.EntityNameDisplaySource;
@@ -224,7 +223,6 @@ import com.simibubi.create.foundation.block.BlockStressDefaults;
 import com.simibubi.create.foundation.block.CopperBlockSet;
 import com.simibubi.create.foundation.block.DyedBlockList;
 import com.simibubi.create.foundation.block.ItemUseOverrides;
-import com.simibubi.create.content.logistics.block.redstone.NixieTubeModel;
 import com.simibubi.create.foundation.data.AssetLookup;
 import com.simibubi.create.foundation.data.BlockStateGen;
 import com.simibubi.create.foundation.data.BuilderTransformers;
@@ -233,6 +231,7 @@ import com.simibubi.create.foundation.data.ModelGen;
 import com.simibubi.create.foundation.data.SharedProperties;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.item.UncontainableBlockItem;
+import com.simibubi.create.foundation.render.MultiRenderTypeModel;
 import com.simibubi.create.foundation.utility.ColorHandlers;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.DyeHelper;
@@ -241,7 +240,6 @@ import com.tterrag.registrate.providers.loot.RegistrateBlockLootTables;
 import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.entry.BlockEntry;
 
-import io.github.fabricators_of_create.porting_lib.model.CompositeModel;
 import me.alphamode.forgetags.Tags;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction.Axis;
@@ -1754,7 +1752,7 @@ public class AllBlocks {
 			.blockstate((c, p) -> p.directionalBlock(c.get(), AssetLookup.forPowered(c, p)))
 			.item(DisplayLinkBlockItem::new)
 			.transform(customItemModel("_", "block"))
-			.onRegister(CreateRegistrate.blockModel(() -> DisplayLinkModel::new))
+			.onRegister(CreateRegistrate.blockModel(() -> MultiRenderTypeModel::forDisplayLink))
 			.register();
 
 	public static final BlockEntry<FlapDisplayBlock> DISPLAY_BOARD =
@@ -1781,7 +1779,7 @@ public class AllBlocks {
 			.addLayer(() -> RenderType::translucent)
 			.item()
 			.transform(customItemModel())
-			.onRegister(CreateRegistrate.blockModel(() -> NixieTubeModel::new))
+			.onRegister(CreateRegistrate.blockModel(() -> MultiRenderTypeModel::forNixieTube))
 			.register();
 
 	public static final DyedBlockList<NixieTubeBlock> NIXIE_TUBES = new DyedBlockList<>(colour -> {
@@ -1796,7 +1794,7 @@ public class AllBlocks {
 			.blockstate(new NixieTubeGenerator()::generate)
 			.loot((p, b) -> p.dropOther(b, ORANGE_NIXIE_TUBE.get()))
 			.addLayer(() -> RenderType::translucent)
-			.onRegister(CreateRegistrate.blockModel(() -> NixieTubeModel::new))
+			.onRegister(CreateRegistrate.blockModel(() -> MultiRenderTypeModel::forNixieTube))
 			.register();
 	});
 

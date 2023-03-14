@@ -36,9 +36,7 @@ public abstract class CapManipulationBehaviourBase<T, S extends CapManipulationB
 		bypassSided = false;
 	}
 
-	protected abstract StorageProvider<T> getProvider(BlockFace face);
-
-	protected abstract UnsidedStorageProvider<T> getUnsidedProvider(BlockPos pos);
+	protected abstract StorageProvider<T> getProvider(BlockPos pos, boolean bypassSided);
 
 	@SuppressWarnings("unchecked")
 	public S bypassSidedness() {
@@ -56,11 +54,13 @@ public abstract class CapManipulationBehaviourBase<T, S extends CapManipulationB
 	}
 
 	public boolean hasInventory() {
-		return targetStorageProvider != null && getInventory() != null;
+		return getInventory() != null;
 	}
 
 	@Nullable
 	public Storage<T> getInventory() {
+		if (targetStorageProvider == null || side == null)
+			return null;
 		return targetStorageProvider.get(side);
 	}
 
@@ -68,13 +68,12 @@ public abstract class CapManipulationBehaviourBase<T, S extends CapManipulationB
 	public void lazyTick() {
 		super.lazyTick();
 		if (targetStorageProvider == null) {
-			BlockFace face = this.target.getTarget(getWorld(), getPos(), tileEntity.getBlockState());
-			if (bypassSided) {
-				targetStorageProvider = getUnsidedProvider(face.getConnectedPos());
-			} else {
-				this.side = face.getFace();
-				targetStorageProvider = getProvider(face.getOpposite());
-			}
+			BlockFace targetBlockFace = target.getTarget(getWorld(), tileEntity.getBlockPos(), tileEntity.getBlockState())
+					.getOpposite();
+			BlockPos pos = targetBlockFace.getPos();
+
+			targetStorageProvider = getProvider(pos, bypassSided);
+			this.side = targetBlockFace.getFace();
 		}
 	}
 

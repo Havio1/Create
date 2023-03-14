@@ -10,7 +10,6 @@ import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
-import com.simibubi.create.foundation.utility.BlockFace;
 
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.util.StorageProvider;
@@ -20,7 +19,6 @@ import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
@@ -52,13 +50,10 @@ public class InvManipulationBehaviour extends CapManipulationBehaviourBase<ItemV
 	}
 
 	@Override
-	protected StorageProvider<ItemVariant> getProvider(BlockFace face) {
-		return StorageProvider.createForItems(getWorld(), face.getPos());
-	}
-
-	@Override
-	protected UnsidedStorageProvider<ItemVariant> getUnsidedProvider(BlockPos pos) {
-		return new UnsidedItemStorageProvider(ItemStorage.SIDED, getWorld(), pos);
+	protected StorageProvider<ItemVariant> getProvider(BlockPos pos, boolean bypassSided) {
+		return bypassSided
+				? new UnsidedItemStorageProvider(getWorld(), pos)
+				: StorageProvider.createForItems(getWorld(), pos);
 	}
 
 	public ItemStack extract() {
@@ -131,8 +126,8 @@ public class InvManipulationBehaviour extends CapManipulationBehaviourBase<ItemV
 	}
 
 	public static class UnsidedItemStorageProvider extends UnsidedStorageProvider<ItemVariant> {
-		protected UnsidedItemStorageProvider(BlockApiLookup<Storage<ItemVariant>, Direction> lookup, Level level, BlockPos pos) {
-			super(lookup, level, pos);
+		protected UnsidedItemStorageProvider(Level level, BlockPos pos) {
+			super(ItemStorage.SIDED, level, pos);
 		}
 
 		@Nullable

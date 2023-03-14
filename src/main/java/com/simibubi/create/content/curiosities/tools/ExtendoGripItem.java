@@ -212,7 +212,7 @@ public class ExtendoGripItem extends Item  {
 		return AllConfigs.SERVER.curiosities.maxExtendoGripActions.get();
 	}
 
-	public static float bufferLivingAttackEvent(DamageSource source, float amount) {
+	public static float bufferLivingAttackEvent(DamageSource source, LivingEntity damaged, float amount) {
 		// Workaround for removed patch to get the attacking entity.
 		lastActiveDamageSource = source;//event.getSource();
 

@@ -97,7 +97,7 @@ public class DeployerFakePlayer extends FakePlayer {
 		return height;
 	}
 
-	public static boolean deployerCollectsDropsFromKilledEntities(LivingEntity target, DamageSource s, Collection<ItemEntity> drops) {
+	public static boolean deployerCollectsDropsFromKilledEntities(LivingEntity target, DamageSource s, Collection<ItemEntity> drops, int lootingLevel, boolean recentlyHit) {
 		if (!(s instanceof EntityDamageSource))
 			return false;
 		EntityDamageSource source = (EntityDamageSource) s;
@@ -127,7 +127,7 @@ public class DeployerFakePlayer extends FakePlayer {
 		super.remove(p_150097_);
 	}
 
-	public static int deployerKillsDoNotSpawnXP(int i, Player player) {
+	public static int deployerKillsDoNotSpawnXP(int i, Player player, LivingEntity entity) {
 		if (player instanceof DeployerFakePlayer)
 			return 0;
 		return i;

@@ -64,7 +64,7 @@ public class CrushingWheelTileEntity extends KineticTileEntity {
 		return 2;		//This does not currently increase mob drops. It seems like this only works for damage done by an entity.
 	}
 
-	public static boolean handleCrushedMobDrops(LivingEntity target, DamageSource source, Collection<ItemEntity> drops) {
+	public static boolean handleCrushedMobDrops(LivingEntity target, DamageSource source, Collection<ItemEntity> drops, int lootingLevel, boolean recentlyHit) {
 		if (source != CrushingWheelTileEntity.DAMAGE_SOURCE)
 			return false;
 		Vec3 outSpeed = Vec3.ZERO;
